@@ -1,0 +1,117 @@
+CREATE TABLE Факультет (
+    ID INT PRIMARY KEY,
+    Название VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Отделение (
+    ID INT PRIMARY KEY,
+    Название VARCHAR(255) NOT NULL,
+    ФакультетID INT,
+    FOREIGN KEY (ФакультетID) REFERENCES Факультет(ID)
+);
+
+CREATE TABLE Здание (
+    ID INT PRIMARY KEY,
+    Название VARCHAR(255) NOT NULL,
+    Адрес VARCHAR(255)
+);
+
+CREATE TABLE Аудитория (
+    ID INT PRIMARY KEY,
+    ЗданиеID INT,
+    Номер INT,
+    Вместимость INT,
+    FOREIGN KEY (ЗданиеID) REFERENCES Здание(ID)
+);
+
+CREATE TABLE Семестр (
+    ID INT PRIMARY KEY,
+    Название VARCHAR(255) NOT NULL,
+    Дата_начала DATE,
+    Дата_окончания DATE
+);
+
+CREATE TABLE Группа (
+    ID INT PRIMARY KEY,
+    Название VARCHAR(255) NOT NULL,
+    ОтделениеID INT,
+    FOREIGN KEY (ОтделениеID) REFERENCES Отделение(ID)
+);
+
+CREATE TABLE Преподаватель
+(
+ID INT PRIMARY KEY,
+ФИО VARCHAR(255) NOT NULL,
+ФакультетID INT,
+FOREIGN KEY (ФакультетID) REFERENCES Факультет(ID)
+);
+
+CREATE TABLE ПрограммаКурса (
+    ID INT PRIMARY KEY,
+    Описание TEXT
+);
+
+CREATE TABLE Курс
+(
+ID INT PRIMARY KEY,
+Название VARCHAR(255) NOT NULL,
+Программа_курсаID INT,
+FOREIGN KEY (Программа_курсаID) REFERENCES ПрограммаКурса(ID)
+);
+
+CREATE TABLE УчебныйПлан (
+    ID INT PRIMARY KEY,
+    ОтделениеID INT,
+    КурсID INT,
+    СеместрID INT,
+    FOREIGN KEY (ОтделениеID) REFERENCES Отделение(ID),
+    FOREIGN KEY (КурсID) REFERENCES Курс(ID),
+    FOREIGN KEY (СеместрID) REFERENCES Семестр(ID)
+);
+
+CREATE TABLE Студент
+(
+ID INT PRIMARY KEY,
+ФИО VARCHAR(255) NOT NULL,
+ГруппаID INT,
+УчебныйПланID INT,
+FOREIGN KEY (ГруппаID) REFERENCES Группа(ID),
+FOREIGN KEY (УчебныйПланID) REFERENCES УчебныйПлан(ID)
+);
+
+CREATE TABLE Оценка (
+    ID INT PRIMARY KEY,
+    СтудентID INT,
+    КурсID INT,
+    Оценка INT,
+    FOREIGN KEY (СтудентID) REFERENCES Студент(ID),
+    FOREIGN KEY (КурсID) REFERENCES Курс(ID)
+);
+
+CREATE TABLE Расписание (
+    ID INT PRIMARY KEY,
+    КурсID INT,
+    ПреподавательID INT,
+    АудиторияID INT,
+    День_недели VARCHAR(15),
+    Время TIME,
+    FOREIGN KEY (КурсID) REFERENCES Курс(ID),
+    FOREIGN KEY (ПреподавательID) REFERENCES Преподаватель(ID),
+    FOREIGN KEY (АудиторияID) REFERENCES Аудитория(ID)
+);
+
+CREATE TABLE Экзамен (
+    ID INT PRIMARY KEY,
+    КурсID INT,
+    Дата DATE,
+    FOREIGN KEY (КурсID) REFERENCES Курс(ID)
+);
+
+CREATE TABLE ЗаданиеДляСамостоятельнойРаботы (
+    ID INT PRIMARY KEY,
+    КурсID INT,
+    Название VARCHAR(255) NOT NULL,
+    Описание TEXT,
+    Дата_создания DATE,
+    FOREIGN KEY (КурсID) REFERENCES Курс(ID)
+);
