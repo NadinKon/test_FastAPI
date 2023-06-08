@@ -8,8 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 app = FastAPI()
 
-DATABASE_URL = "postgresql://postgres:*FFGHh658!@localhost:5432/db"
-# DATABASE_URI = 'postgresql://postgres:<password>@localhost/<name_of_the_datbase>'
+DATABASE_URL = "postgresql://postgres:*********@localhost:5432/db"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -79,7 +78,7 @@ def read_teachers(db: Session = Depends(get_db)):  # обработка запр
 # Маршрут для создания нового курса
 @app.post("/courses", response_model=Course)
 def create_course(course: Course, db: Session = Depends(get_db)):  # обработка запроса и создания нового курса
-    db_course = CourseDB(**course.dict())  # создание объекта курса в формате SQLAlchemy модели из входного объекта Pydantic модели
+    db_course = CourseDB(**course.dict())  # создание объекта курса в формате SQLAlchemy модели из объекта Pydantic модели
     db.add(db_course)  # добавление нового курса в сессию SQLAlchemy
     db.commit()  # сохранение изменений в базе данных
     db.refresh(db_course)  # обновление объекта курса с полученными данными из базы данных
